@@ -33,6 +33,7 @@ public class JsonHelper {
      * 取得gson对象
      * @return gson对象
      */
+
     public static Gson getGson(){
         if (mGson == null){
             mGson = new Gson();
