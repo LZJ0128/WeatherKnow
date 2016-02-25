@@ -5,7 +5,6 @@ package com.lzj.weatherknow.helper;
  * 常量帮助类
  */
 public class ConstantHelper {
-
     /**
      * 和风天气网国内城市ID接口
      */
