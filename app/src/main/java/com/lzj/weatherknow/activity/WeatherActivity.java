@@ -11,9 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.lzj.weatherknow.R;
+import com.lzj.weatherknow.entity.BasicEntity;
 import com.lzj.weatherknow.entity.HeWeatherDataEntity;
 import com.lzj.weatherknow.entity.NowEntity;
 import com.lzj.weatherknow.entity.ObjectEntity;
+import com.lzj.weatherknow.entity.UpdateEntity;
 import com.lzj.weatherknow.helper.ConstantHelper;
 import com.lzj.weatherknow.helper.DBOperationHelper;
 import com.lzj.weatherknow.helper.JsonHelper;
@@ -25,18 +27,29 @@ import java.util.List;
 
 public class WeatherActivity extends Activity implements View.OnClickListener{
 
-    private TextView mTxvText;
+    /**
+     * 分别为：城市名，天气，温度
+     */
+    private TextView mTxvCity, mTxvWeather, mTxvTemp, mTxvUpdate;
     DBOperationHelper dbOperationHelper;
     private String cancelOrClick;
+    private String mCityName;//城市名
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        mTxvText = (TextView)findViewById(R.id.txv_text);
         dbOperationHelper = DBOperationHelper.getInstance(this);
         cancelOrClick = SharePreferenceHelper.getStringSP(WeatherActivity.this, "cancel_or_click", "click", "");
+        initUI();
         getCityWeather();
+    }
+
+    public void initUI(){
+        mTxvCity = (TextView)findViewById(R.id.txv_city);
+        mTxvWeather = (TextView)findViewById(R.id.txv_weather);
+        mTxvTemp = (TextView)findViewById(R.id.txv_temp);
+        mTxvUpdate = (TextView)findViewById(R.id.txv_update);
     }
 
     public void onClick(View v){
@@ -46,32 +59,38 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         }
     }
 
+    /**
+     * 获取天气
+     */
     public void getCityWeather(){
 
-        String cityName = "";
-
         if (cancelOrClick.equals("click")){
-            Intent intent = getIntent();
-            cityName = intent.getStringExtra("city_name");
+            mCityName = SharePreferenceHelper.getStringSP(this, "city_name", "city_name", "福州");
         }else if (cancelOrClick.equals("cancel")){
 
         }
-
-        String cityId = DBOperationHelper.getInstance(this).getCityId(cityName);
-
+        //城市ID转换为城市ID
+        String cityId = DBOperationHelper.getInstance(this).getCityId(mCityName);
+        //由城市ID获取天气信息
         HttpUtil.sendHttpRequest(ConstantHelper.cityInfoUrl(cityId), new HttpCallbackListener() {
             @Override
             public void onResponseSuccess(String response) {
-                Log.e("MainActivity2", "onResponseSuccess");
                 ObjectEntity objectEntity = JsonHelper.fromJson(response, ObjectEntity.class);
                 if (objectEntity == null){
                     Log.e("MainActivity", "ObjectEntityError");
                     return;
                 }
+                //heWeatherDataEntity虽是列表，但只有一条
                 List<HeWeatherDataEntity> heWeatherDataEntity = objectEntity.getWeatherDataList();
-                NowEntity nowEntity = heWeatherDataEntity.get(0).getNow();
-                fillData(nowEntity);
 
+                //当前天气信息
+                NowEntity nowEntity = heWeatherDataEntity.get(0).getNow();
+                fillNowData(nowEntity);
+                //基础天气信息
+                BasicEntity basicEntity = heWeatherDataEntity.get(0).getBasic();
+                //获取更新时间
+                UpdateEntity updateEntity = basicEntity.getUpdate();
+                fillUpdateData(updateEntity);
             }
 
             @Override
@@ -82,14 +101,33 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         });
     }
 
-    public void fillData(final NowEntity nowEntity){
+    /**
+     * 填充当前的天气
+     * @param nowEntity
+     */
+    public void fillNowData(final NowEntity nowEntity){
+        //UI界面只能在主线程中改变
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTxvText.setText(nowEntity.getTmp());
+                mTxvTemp.setText(nowEntity.getTmp() + "℃");
+                mTxvCity.setText(mCityName);
+                mTxvWeather.setText(nowEntity.getNowCond().getTxt());
             }
         });
+    }
 
+    /**
+     * 填充更新时间
+     * @param updateEntity
+     */
+    public void fillUpdateData(final UpdateEntity updateEntity){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTxvUpdate.setText(updateEntity.getLocalTime());
+            }
+        });
     }
 
 
