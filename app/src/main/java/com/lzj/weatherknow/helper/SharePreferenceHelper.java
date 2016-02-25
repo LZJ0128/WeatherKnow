@@ -62,4 +62,31 @@ public class SharePreferenceHelper {
         SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         return sp.getString(key, value);
     }
+
+    /**
+     * 在本地保存boolean类型的SP
+     * @param context
+     * @param spName
+     * @param key
+     * @param value
+     */
+    public static void setBooleanSP(Context context, String spName, String key, boolean value){
+        SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
+    /**
+     * 得到booleanSP的value
+     * @param context
+     * @param spName
+     * @param key
+     * @param value
+     * @return
+     */
+    public static boolean getBooleanSP(Context context, String spName, String key, boolean value){
+        SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        return sp.getBoolean(key, value);
+    }
 }
