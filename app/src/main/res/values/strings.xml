@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WeatherKnow</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="search_city">请输入城市名</string>
+    <string name="cancel">取消</string>
+</resources>
