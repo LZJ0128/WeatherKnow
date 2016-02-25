@@ -57,6 +57,7 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
     public void initUI(){
         mEdtSearch = (EditText)findViewById(R.id.edt_search);
         mTxvCancel = (TextView)findViewById(R.id.txv_cancel);
+        mTxvCancel.setOnClickListener(this);
         mLsvCity = (ListView)findViewById(R.id.lsv_city);
         mEdtSearch.addTextChangedListener(watcher);
         mCityEntity = DBOperationHelper.getInstance(SelectCityActivity.this).getCityList();
