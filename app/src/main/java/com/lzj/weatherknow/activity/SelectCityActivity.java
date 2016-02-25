@@ -2,6 +2,7 @@ package com.lzj.weatherknow.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,11 +40,17 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
     List<String> mNewCityList;
     List<CityEntity> mCityEntity;
 
+    /**
+     * 标志位，是否从WeatherActivity跳转而来
+     */
+    private boolean isFromWeatherActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_select_city);
+        jumpToWeather();
         if (SharePreferenceHelper.getIntSP(this, "flag", "flag", 0) == 0){
             //防止多次从数据库加载数据，加载一次后不再加载
             getCityList();
@@ -72,6 +79,23 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
 
     }
 
+    /**
+     * 只有已经选择了城市且不是从WeatherActivity跳转过来，才会直接跳转到WeatherActivity
+     */
+    public void jumpToWeather(){
+        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+        if (SharePreferenceHelper.getBooleanSP(SelectCityActivity.this, "city_selected",
+                "select", false) && !isFromWeatherActivity){
+            Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    /**
+     * 点击事件
+     * @param view
+     */
     @Override
     public void onClick(View view){
         switch (view.getId()){
@@ -86,14 +110,19 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
         }
     }
 
+    /**
+     * ListView的item点击事件
+     */
     private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String cityName = mCityList.get(position);
             Intent intent = new Intent(SelectCityActivity.this, WeatherActivity.class);
             SharePreferenceHelper.setStringSP(SelectCityActivity.this, "cancel_or_click", "click", "click");
-            intent.putExtra("city_name", cityName);
+            SharePreferenceHelper.setBooleanSP(SelectCityActivity.this, "city_selected", "select", true);
+            SharePreferenceHelper.setStringSP(SelectCityActivity.this, "city_name", "city_name", cityName);
             startActivity(intent);
+            finish();
         }
     };
 
