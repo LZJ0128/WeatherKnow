@@ -12,20 +12,29 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2/17 0017.
- * 数据库想过操作帮助类
+ * 数据库相关操作帮助类
  */
 public class DBOperationHelper {
-    public static final String DB_NAME = "city_list";
-    public static final String TABLE_CITY = "cities";
-    public static final int VERSION = 1;
+    public static final String DB_NAME = "city_list";//数据库名
+    public static final String TABLE_CITY = "cities";//表名
+    public static final int VERSION = 1;//版本号
     private SQLiteDatabase mDB;
     private static DBOperationHelper mDBOperation;
 
+    /**
+     * 构造方法
+     * @param context
+     */
     private DBOperationHelper(Context context){
         DBOpenHelper dbOpenHelper = new DBOpenHelper(context, DB_NAME, null, VERSION);
         mDB = dbOpenHelper.getWritableDatabase();
     }
 
+    /**
+     * 一个实例
+     * @param context
+     * @return
+     */
     public synchronized static DBOperationHelper getInstance(Context context){
         if (mDBOperation == null){
             mDBOperation = new DBOperationHelper(context);
