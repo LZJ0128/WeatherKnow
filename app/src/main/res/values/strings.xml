@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherKnow</string>
+    <string name="app_name">天气知道</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
