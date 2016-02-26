@@ -10,7 +10,7 @@ public class DailyForecastEntity {
 
     private AstroEntity astro;    //天文数值
     private ConditionEntity cond;    //天气状况
-    private TempEntity temp;    //温度
+    private TempEntity tmp;    //温度
     private WindEntity wind;    //风力状况
     private String date;    //日期
     private String hum;     //湿度
@@ -43,12 +43,12 @@ public class DailyForecastEntity {
         this.date = date;
     }
 
-    public TempEntity getTemp() {
-        return temp;
+    public TempEntity getTmp() {
+        return tmp;
     }
 
-    public void setTemp(TempEntity temp) {
-        this.temp = temp;
+    public void setTmp(TempEntity tmp) {
+        this.tmp = tmp;
     }
 
     public WindEntity getWind() {

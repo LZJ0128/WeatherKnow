@@ -1,12 +1,16 @@
 package com.lzj.weatherknow.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Administrator on 2/23 0023.
  * 更新时间
  */
 public class UpdateEntity {
 
+    @SerializedName("loc")
     private String localTime;
+    @SerializedName("utc")
     private String utcTime;
 
     public String getLocalTime() {
