@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lzj.weatherknow.R;
+import com.lzj.weatherknow.adapter.WeatherAdapter;
 import com.lzj.weatherknow.entity.BasicEntity;
+import com.lzj.weatherknow.entity.DailyForecastEntity;
 import com.lzj.weatherknow.entity.HeWeatherDataEntity;
+import com.lzj.weatherknow.entity.HourlyForecastEntity;
 import com.lzj.weatherknow.entity.NowEntity;
 import com.lzj.weatherknow.entity.ObjectEntity;
 import com.lzj.weatherknow.entity.UpdateEntity;
@@ -23,6 +28,7 @@ import com.lzj.weatherknow.helper.SharePreferenceHelper;
 import com.lzj.weatherknow.listener.HttpCallbackListener;
 import com.lzj.weatherknow.util.HttpUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherActivity extends Activity implements View.OnClickListener{
@@ -31,9 +37,12 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
      * 分别为：城市名，天气，温度
      */
     private TextView mTxvCity, mTxvWeather, mTxvTemp, mTxvUpdate;
-    DBOperationHelper dbOperationHelper;
     private String cancelOrClick;
     private String mCityName;//城市名
+    private ListView mLsvWeather;
+    List<DailyForecastEntity> mDailyList = new ArrayList<>();
+    List<HourlyForecastEntity> mHourlyList = new ArrayList<>();
+    DBOperationHelper dbOperationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +59,11 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mTxvWeather = (TextView)findViewById(R.id.txv_weather);
         mTxvTemp = (TextView)findViewById(R.id.txv_temp);
         mTxvUpdate = (TextView)findViewById(R.id.txv_update);
+        mLsvWeather = (ListView)findViewById(R.id.lsv_weather);
+
+        View footView = LayoutInflater.from(this).inflate(R.layout.item_weather_3, null);
+        mLsvWeather.addFooterView(footView);
+        mLsvWeather.setAdapter(new WeatherAdapter(this, mDailyList));
     }
 
     public void onClick(View v){
@@ -91,12 +105,15 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 //获取更新时间
                 UpdateEntity updateEntity = basicEntity.getUpdate();
                 fillUpdateData(updateEntity);
+                //获取每日天气列表
+                mDailyList = heWeatherDataEntity.get(0).getDailyForecastList();
+                fillDailyData(mDailyList);
             }
 
             @Override
             public void onResponseError(Exception e) {
                 e.printStackTrace();
-                Log.e("MainActivity2", "onResponseError");
+                Log.e("WeatherActivity", "onResponseError");
             }
         });
     }
@@ -117,6 +134,29 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         });
     }
 
+    //填充近一周的天气
+    public void fillDailyData(final List<DailyForecastEntity> dailyList){
+        final View headView = LayoutInflater.from(this).inflate(R.layout.item_weather_1, null);
+        final TextView date = (TextView)headView.findViewById(R.id.txv_date0);
+        final TextView weekday = (TextView)headView.findViewById(R.id.txv_weekday0);
+        final TextView tempMax = (TextView)headView.findViewById(R.id.txv_temp_max);
+        final TextView tempMin = (TextView)headView.findViewById(R.id.txv_temp_min);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                date.setText(dailyList.get(0).getDate().substring(5));
+                weekday.setText(ConstantHelper.getWeekday(-1));
+                tempMax.setText(dailyList.get(0).getTmp().getMax());
+                tempMin.setText(dailyList.get(0).getTmp().getMin());
+                //填充当天天气
+                mLsvWeather.addHeaderView(headView);
+                //未来六天的天气
+                mLsvWeather.setAdapter(new WeatherAdapter(WeatherActivity.this, mDailyList));
+            }
+        });
+
+    }
+
     /**
      * 填充更新时间
      * @param updateEntity
@@ -125,7 +165,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTxvUpdate.setText(updateEntity.getLocalTime());
+                mTxvUpdate.setText(updateEntity.getLocalTime().substring(11));
             }
         });
     }
