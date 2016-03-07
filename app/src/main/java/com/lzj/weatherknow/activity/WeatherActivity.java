@@ -34,7 +34,7 @@ import java.util.List;
 public class WeatherActivity extends Activity implements View.OnClickListener{
 
     /**
-     * 分别为：城市名，天气，温度
+     * 分别为：城市名，天气，温度，更新时间
      */
     private TextView mTxvCity, mTxvWeather, mTxvTemp, mTxvUpdate;
     private String cancelOrClick;
@@ -107,7 +107,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 fillUpdateData(updateEntity);
                 //获取每日天气列表
                 mDailyList = heWeatherDataEntity.get(0).getDailyForecastList();
-                fillDailyData(mDailyList);
+                mHourlyList = heWeatherDataEntity.get(0).getHourlyForecastList();
+                fillDailyData(mDailyList, mHourlyList);
+
             }
 
             @Override
@@ -127,27 +129,47 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTxvTemp.setText(nowEntity.getTmp() + "℃");
+                mTxvTemp.setText(nowEntity.getTmp() + "°");
                 mTxvCity.setText(mCityName);
                 mTxvWeather.setText(nowEntity.getNowCond().getTxt());
             }
         });
     }
 
-    //填充近一周的天气
-    public void fillDailyData(final List<DailyForecastEntity> dailyList){
+    /**
+     * 填充近一周和未来几个小时的天气
+     * @param dailyList
+     * @param hourlyList
+     */
+    public void fillDailyData(final List<DailyForecastEntity> dailyList, final List<HourlyForecastEntity> hourlyList){
         final View headView = LayoutInflater.from(this).inflate(R.layout.item_weather_1, null);
         final TextView date = (TextView)headView.findViewById(R.id.txv_date0);
         final TextView weekday = (TextView)headView.findViewById(R.id.txv_weekday0);
         final TextView tempMax = (TextView)headView.findViewById(R.id.txv_temp_max);
         final TextView tempMin = (TextView)headView.findViewById(R.id.txv_temp_min);
+
+        final TextView time0 = (TextView)headView.findViewById(R.id.txv_time0);
+        final TextView time1 = (TextView)headView.findViewById(R.id.txv_time1);
+        final TextView time2 = (TextView)headView.findViewById(R.id.txv_time2);
+        final TextView temp0 = (TextView)headView.findViewById(R.id.txv_temp0);
+        final TextView temp1 = (TextView)headView.findViewById(R.id.txv_temp1);
+        final TextView temp2 = (TextView)headView.findViewById(R.id.txv_temp2);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 date.setText(dailyList.get(0).getDate().substring(5));
-                weekday.setText(ConstantHelper.getWeekday(-1));
+                weekday.setText("星期" + ConstantHelper.getWeekday(-1));
                 tempMax.setText(dailyList.get(0).getTmp().getMax());
-                tempMin.setText(dailyList.get(0).getTmp().getMin());
+                tempMin.setText(dailyList.get(0).getTmp().getMin() + "°");
+
+                time0.setText(hourlyList.get(0).getDate().substring(11));
+                time1.setText(hourlyList.get(1).getDate().substring(11));
+                time2.setText(hourlyList.get(2).getDate().substring(11));
+                temp0.setText(hourlyList.get(0).getTmp() + "°");
+                temp1.setText(hourlyList.get(1).getTmp() + "°");
+                temp2.setText(hourlyList.get(2).getTmp() + "°");
+
                 //填充当天天气
                 mLsvWeather.addHeaderView(headView);
                 //未来六天的天气
