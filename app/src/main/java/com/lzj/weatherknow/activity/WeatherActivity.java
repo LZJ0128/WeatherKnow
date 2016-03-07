@@ -173,13 +173,17 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
 
                 //把当天天气和每小时天气作为头部添加到ListView中
                 mLsvWeather.addHeaderView(headView);
-                //未来六天的天气
-
             }
         });
 
     }
 
+    /**
+     * 添加ListView尾部信息
+     * @param aqiEntity
+     * @param nowEntity
+     * @param dailyList
+     */
     public void getFooterView(final AqiEntity aqiEntity, final NowEntity nowEntity, final List<DailyForecastEntity> dailyList){
         final View footView = LayoutInflater.from(this).inflate(R.layout.item_weather_3, null);
         final TextView qity = (TextView)footView.findViewById(R.id.txv_qity);
@@ -199,12 +203,13 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 sr.setText(dailyList.get(0).getAstro().getSunRise());
                 ss.setText(dailyList.get(0).getAstro().getSunSet());
                 windDir.setText(nowEntity.getNowWind().getDir());
-                windSc.setText(nowEntity.getNowWind().getSc()  + "级");
-                windSpd.setText(nowEntity.getNowWind().getSpd() + "km/h");
-                hum.setText(nowEntity.getHum() + "%");
-                pcpn.setText(nowEntity.getPcpn() + "mm");
+                windSc.setText(nowEntity.getNowWind().getSc()  + " 级");
+                windSpd.setText(nowEntity.getNowWind().getSpd() + " km/h");
+                hum.setText(nowEntity.getHum() + " %");
+                pcpn.setText(nowEntity.getPcpn() + " mm");
 
                 mLsvWeather.addFooterView(footView);
+                //未来六天的天气
                 mLsvWeather.setAdapter(new WeatherAdapter(WeatherActivity.this, mDailyList));
 
             }
@@ -223,6 +228,5 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
             }
         });
     }
-
 
 }
