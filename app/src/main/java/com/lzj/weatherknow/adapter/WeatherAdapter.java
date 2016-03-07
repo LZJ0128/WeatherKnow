@@ -54,8 +54,7 @@ public class WeatherAdapter extends BaseAdapter{
             concertView = LayoutInflater.from(mContext).inflate(R.layout.item_weather_2, null);
             holder.mTxvDate = (TextView)concertView.findViewById(R.id.txv_date1);
             holder.mTxvWeek = (TextView)concertView.findViewById(R.id.txv_weekday1);
-            holder.mTxvTempMax = (TextView)concertView.findViewById(R.id.txv_temp_max);
-            holder.mTxvTempMin = (TextView)concertView.findViewById(R.id.txv_temp_min);
+            holder.mTxvTemp = (TextView)concertView.findViewById(R.id.txv_temp);
             holder.mImageView = (ImageView)concertView.findViewById(R.id.img_weather1);
         }else {
             holder = (WeatherHolder)concertView.getTag();
@@ -65,16 +64,13 @@ public class WeatherAdapter extends BaseAdapter{
         String date = entity.getDate().substring(5);//日期
         holder.mTxvDate.setText(date);
         holder.mTxvWeek.setText(ConstantHelper.getWeekday(position));
-        holder.mTxvTempMax.setText(entity.getTmp().getMax());
-        holder.mTxvTempMin.setText(entity.getTmp().getMin());
+        holder.mTxvTemp.setText(entity.getTmp().getMax() + " ~ " + entity.getTmp().getMin() + "°");
 
         return concertView;
     }
 
-
-
     static class WeatherHolder{
-        TextView mTxvDate, mTxvWeek, mTxvTempMax, mTxvTempMin;
+        TextView mTxvDate, mTxvWeek, mTxvTemp;
         ImageView mImageView;
     }
 

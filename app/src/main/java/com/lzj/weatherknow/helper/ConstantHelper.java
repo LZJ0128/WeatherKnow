@@ -37,31 +37,31 @@ public class ConstantHelper {
         switch (weekday){
             case 1:
             case 8:
-                dayOfWeek = "星期日";
+                dayOfWeek = "日";
                 break;
             case 2:
             case 9:
-                dayOfWeek = "星期一";
+                dayOfWeek = "一";
                 break;
             case 3:
             case 10:
-                dayOfWeek = "星期二";
+                dayOfWeek = "二";
                 break;
             case 4:
             case 11:
-                dayOfWeek = "星期三";
+                dayOfWeek = "三";
                 break;
             case 5:
             case 12:
-                dayOfWeek = "星期四";
+                dayOfWeek = "四";
                 break;
             case 6:
             case 13:
-                dayOfWeek = "星期五";
+                dayOfWeek = "五";
                 break;
             case 7:
             case 14:
-                dayOfWeek = "星期六";
+                dayOfWeek = "六";
                 break;
             default:
                 break;

@@ -22,9 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/txv_date1"
-            android:layout_marginLeft="5dp"
-            android:textSize="16sp"
-            android:text="星期五"/>
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/img_weather1"
@@ -32,28 +31,9 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/txv_temp_max"
+            android:id="@+id/txv_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/txv_temp_line"
-            android:textSize="16sp"
-            android:text="11"/>
-
-        <TextView
-            android:id="@+id/txv_temp_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/txv_temp_min"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:textSize="16sp"
-            android:text="~"/>
-
-        <TextView
-            android:id="@+id/txv_temp_min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="8"
             android:textSize="16sp"
             android:layout_alignParentRight="true"/>
 
