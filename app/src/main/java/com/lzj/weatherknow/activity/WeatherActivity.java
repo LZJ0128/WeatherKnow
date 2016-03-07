@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.lzj.weatherknow.R;
 import com.lzj.weatherknow.adapter.WeatherAdapter;
+import com.lzj.weatherknow.entity.AqiEntity;
 import com.lzj.weatherknow.entity.BasicEntity;
 import com.lzj.weatherknow.entity.DailyForecastEntity;
 import com.lzj.weatherknow.entity.HeWeatherDataEntity;
@@ -61,8 +62,6 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mTxvUpdate = (TextView)findViewById(R.id.txv_update);
         mLsvWeather = (ListView)findViewById(R.id.lsv_weather);
 
-        View footView = LayoutInflater.from(this).inflate(R.layout.item_weather_3, null);
-        mLsvWeather.addFooterView(footView);
         mLsvWeather.setAdapter(new WeatherAdapter(this, mDailyList));
     }
 
@@ -109,7 +108,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 mDailyList = heWeatherDataEntity.get(0).getDailyForecastList();
                 mHourlyList = heWeatherDataEntity.get(0).getHourlyForecastList();
                 fillDailyData(mDailyList, mHourlyList);
-
+                AqiEntity aqiEntity = heWeatherDataEntity.get(0).getAqi();
+                //获取底部信息
+                getFooterView(aqiEntity, nowEntity, mDailyList);
             }
 
             @Override
@@ -170,13 +171,44 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 temp1.setText(hourlyList.get(1).getTmp() + "°");
                 temp2.setText(hourlyList.get(2).getTmp() + "°");
 
-                //填充当天天气
+                //把当天天气和每小时天气作为头部添加到ListView中
                 mLsvWeather.addHeaderView(headView);
                 //未来六天的天气
-                mLsvWeather.setAdapter(new WeatherAdapter(WeatherActivity.this, mDailyList));
+
             }
         });
 
+    }
+
+    public void getFooterView(final AqiEntity aqiEntity, final NowEntity nowEntity, final List<DailyForecastEntity> dailyList){
+        final View footView = LayoutInflater.from(this).inflate(R.layout.item_weather_3, null);
+        final TextView qity = (TextView)footView.findViewById(R.id.txv_qity);
+        final TextView aqi = (TextView)footView.findViewById(R.id.txv_aqi);
+        final TextView sr = (TextView)footView.findViewById(R.id.txv_sr);
+        final TextView ss = (TextView)footView.findViewById(R.id.txv_ss);
+        final TextView windDir = (TextView)footView.findViewById(R.id.txv_wind_dir);
+        final TextView windSc = (TextView)footView.findViewById(R.id.txv_wind_sc);
+        final TextView windSpd = (TextView)footView.findViewById(R.id.txv_wind_spd);
+        final TextView hum = (TextView)footView.findViewById(R.id.txv_hum);
+        final TextView pcpn = (TextView)footView.findViewById(R.id.txv_pcpn);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                qity.setText(aqiEntity.getAqiCity().getQuality());
+                aqi.setText(aqiEntity.getAqiCity().getAqi());
+                sr.setText(dailyList.get(0).getAstro().getSunRise());
+                ss.setText(dailyList.get(0).getAstro().getSunSet());
+                windDir.setText(nowEntity.getNowWind().getDir());
+                windSc.setText(nowEntity.getNowWind().getSc()  + "级");
+                windSpd.setText(nowEntity.getNowWind().getSpd() + "km/h");
+                hum.setText(nowEntity.getHum() + "%");
+                pcpn.setText(nowEntity.getPcpn() + "mm");
+
+                mLsvWeather.addFooterView(footView);
+                mLsvWeather.setAdapter(new WeatherAdapter(WeatherActivity.this, mDailyList));
+
+            }
+        });
     }
 
     /**
