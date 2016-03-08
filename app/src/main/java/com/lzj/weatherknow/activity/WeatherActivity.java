@@ -1,18 +1,23 @@
 package com.lzj.weatherknow.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lzj.weatherknow.R;
+import com.lzj.weatherknow.adapter.SugListAdapter;
 import com.lzj.weatherknow.adapter.WeatherAdapter;
 import com.lzj.weatherknow.entity.AqiEntity;
 import com.lzj.weatherknow.entity.BasicEntity;
@@ -21,6 +26,8 @@ import com.lzj.weatherknow.entity.HeWeatherDataEntity;
 import com.lzj.weatherknow.entity.HourlyForecastEntity;
 import com.lzj.weatherknow.entity.NowEntity;
 import com.lzj.weatherknow.entity.ObjectEntity;
+import com.lzj.weatherknow.entity.SugListEntity;
+import com.lzj.weatherknow.entity.SuggestionEntity;
 import com.lzj.weatherknow.entity.UpdateEntity;
 import com.lzj.weatherknow.helper.ConstantHelper;
 import com.lzj.weatherknow.helper.DBOperationHelper;
@@ -45,6 +52,12 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     List<HourlyForecastEntity> mHourlyList = new ArrayList<>();
     DBOperationHelper dbOperationHelper;
 
+    /**
+     * 生活指数
+     */
+    private TextView mSug;
+    private SuggestionEntity mSugEntity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +76,16 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mLsvWeather = (ListView)findViewById(R.id.lsv_weather);
 
         mLsvWeather.setAdapter(new WeatherAdapter(this, mDailyList));
+
+        mSug = (TextView)findViewById(R.id.txv_sug);
+        mSug.setOnClickListener(this);
     }
 
     public void onClick(View v){
         switch (v.getId()){
+            case R.id.txv_sug:
+                showSugDialog(mSugEntity);
+                break;
             default:
                 break;
         }
@@ -89,8 +108,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
             @Override
             public void onResponseSuccess(String response) {
                 ObjectEntity objectEntity = JsonHelper.fromJson(response, ObjectEntity.class);
-                if (objectEntity == null){
-                    Log.e("MainActivity", "ObjectEntityError");
+                if (objectEntity == null) {
                     return;
                 }
                 //heWeatherDataEntity虽是列表，但只有一条
@@ -111,6 +129,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 AqiEntity aqiEntity = heWeatherDataEntity.get(0).getAqi();
                 //获取底部信息
                 getFooterView(aqiEntity, nowEntity, mDailyList);
+
+                //生活指数
+                mSugEntity = heWeatherDataEntity.get(0).getSuggestion();
             }
 
             @Override
@@ -227,6 +248,63 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 mTxvUpdate.setText(updateEntity.getLocalTime().substring(11));
             }
         });
+    }
+
+
+    /**
+     * SuggestionEntity里面的数据是几个对象，而不是一个数组
+     * 把SuggestionEntity转为List<SugListEntity>存储
+     * @param entity
+     * @return
+     */
+    public List<SugListEntity> getSugList(SuggestionEntity entity){
+        List<SugListEntity> sugList = new ArrayList<>();
+
+        //SuggestionEntity里面的数据
+        sugList.add(getSug("穿衣指数", entity.getDressingEntity().getBrf(), entity.getDressingEntity().getTxt()));
+        sugList.add(getSug("洗车指数", entity.getCarEntity().getBrf(), entity.getCarEntity().getTxt()));
+        sugList.add(getSug("感冒指数", entity.getFluEntity().getBrf(), entity.getFluEntity().getTxt()));
+        sugList.add(getSug("运动指数", entity.getSportEntity().getBrf(), entity.getSportEntity().getTxt()));
+        sugList.add(getSug("旅游指数", entity.getTravelEntity().getBrf(), entity.getTravelEntity().getTxt()));
+        sugList.add(getSug("紫外线指数", entity.getUvEntity().getBrf(), entity.getUvEntity().getTxt()));
+
+        return sugList;
+    }
+
+    /**
+     * 添加单个SugList
+     * @param title
+     * @param brf
+     * @param txt
+     * @return
+     */
+    public SugListEntity getSug(String title, String brf, String txt){
+        SugListEntity sug = new SugListEntity();
+        sug.setTitle(title);
+        sug.setBrf(brf);
+        sug.setTxt(txt);
+        return sug;
+    }
+
+    /**
+     * 显示生活指数窗口
+     * @param entity
+     */
+    public void showSugDialog(SuggestionEntity entity){
+        Dialog dialog = new Dialog(WeatherActivity.this, R.style.SugDialog);
+        dialog.setContentView(R.layout.dialog_suggestion);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setTitle("生活指数");
+        Window window = dialog.getWindow();
+        WindowManager manager = window.getWindowManager();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.gravity = Gravity.CENTER;
+        window.setAttributes(params);
+
+        ListView listView = (ListView)dialog.findViewById(R.id.lsv_suggestion);
+        listView.setAdapter(new SugListAdapter(getBaseContext(), getSugList(entity)));
+        listView.setClickable(false);
+        dialog.show();
     }
 
 }

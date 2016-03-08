@@ -1,57 +1,84 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:layout_height="match_parent"
+        android:paddingBottom="30dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更新："/>
+
+            <TextView
+                android:id="@+id/txv_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17:48"/>
+
+        </LinearLayout>
 
         <TextView
+            android:id="@+id/txv_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="更新："/>
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/txv_update"
+            android:id="@+id/txv_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="17:48"/>
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txv_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp"/>
+
+        <ListView
+            android:id="@+id/lsv_weather"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+
+        </ListView>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/txv_city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="20dp"
-        android:textSize="25sp" />
-
-    <TextView
-        android:id="@+id/txv_weather"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/txv_temp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="40sp"/>
-
-    <ListView
-        android:id="@+id/lsv_weather"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null">
+        android:layout_height="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignParentBottom="true">
 
-    </ListView>
+        <TextView
+            android:id="@+id/txv_sug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生活指数"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="切换"/>
 
-</LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
