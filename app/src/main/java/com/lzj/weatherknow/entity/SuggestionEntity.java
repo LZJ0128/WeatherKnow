@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
  * 生活指数
  */
 public class SuggestionEntity {
+    @SerializedName("comf")
+    private SugComfEntity comfEntity;   //舒适指数
     @SerializedName("drsg")
     private SugDressingEntity dressingEntity;  //穿衣指数
     @SerializedName("uv")
@@ -19,6 +21,14 @@ public class SuggestionEntity {
     private SugFluEntity fluEntity;    //感冒指数
     @SerializedName("sport")
     private SugSportEntity sportEntity;    //运动指数
+
+    public SugComfEntity getComfEntity() {
+        return comfEntity;
+    }
+
+    public void setComfEntity(SugComfEntity comfEntity) {
+        this.comfEntity = comfEntity;
+    }
 
     public SugDressingEntity getDressingEntity() {
         return dressingEntity;

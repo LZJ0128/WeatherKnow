@@ -185,15 +185,32 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 tempMax.setText(dailyList.get(0).getTmp().getMax());
                 tempMin.setText(dailyList.get(0).getTmp().getMin() + "°");
 
-                time0.setText(hourlyList.get(0).getDate().substring(11));
-                time1.setText(hourlyList.get(1).getDate().substring(11));
-                time2.setText(hourlyList.get(2).getDate().substring(11));
-                temp0.setText(hourlyList.get(0).getTmp() + "°");
-                temp1.setText(hourlyList.get(1).getTmp() + "°");
-                temp2.setText(hourlyList.get(2).getTmp() + "°");
-
                 //把当天天气和每小时天气作为头部添加到ListView中
                 mLsvWeather.addHeaderView(headView);
+
+                time0.setText(hourlyList.get(0).getDate().substring(11));
+                temp0.setText(hourlyList.get(0).getTmp() + "°");
+
+                if (hourlyList.size() == 1){
+                    time1.setText("01:00");
+                    temp1.setText(Integer.valueOf(hourlyList.get(0).getTmp()) - 1 + "°");
+                    time2.setText("04:00");
+                    temp2.setText(dailyList.get(0).getTmp().getMin() + "°");
+                    return;
+                }
+
+                time1.setText(hourlyList.get(1).getDate().substring(11));
+                temp1.setText(hourlyList.get(1).getTmp() + "°");
+
+                if (hourlyList.size() == 2){
+                    time2.setText("01:00");
+                    temp2.setText(Integer.valueOf(hourlyList.get(1).getTmp()) - 2 + "°");
+                    return;
+                }
+
+                time2.setText(hourlyList.get(2).getDate().substring(11));
+                temp2.setText(hourlyList.get(2).getTmp() + "°");
+
             }
         });
 
@@ -261,6 +278,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         List<SugListEntity> sugList = new ArrayList<>();
 
         //SuggestionEntity里面的数据
+        sugList.add(getSug("舒适指数", entity.getComfEntity().getBrf(), entity.getComfEntity().getTxt()));
         sugList.add(getSug("穿衣指数", entity.getDressingEntity().getBrf(), entity.getDressingEntity().getTxt()));
         sugList.add(getSug("洗车指数", entity.getCarEntity().getBrf(), entity.getCarEntity().getTxt()));
         sugList.add(getSug("感冒指数", entity.getFluEntity().getBrf(), entity.getFluEntity().getTxt()));
