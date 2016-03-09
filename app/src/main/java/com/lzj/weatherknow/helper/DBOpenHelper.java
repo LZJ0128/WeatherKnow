@@ -10,10 +10,22 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBOpenHelper extends SQLiteOpenHelper {
 
+    /**
+     * 所有城市列表
+     */
     public static final String CREATE_CITIES = "create table cities (" +
             "id integer primary key autoincrement, " +
             "city_name text," +
             "city_id text)";
+
+    /**
+     * 历史记录
+     */
+    public static final String CREATE_WEATHERS = "create table weathers (" +
+            "id integer primary key autoincrement, " +
+            "city_name text, " +
+            "weather text, " +
+            "temp text)";
 
     public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version){
         super(context, name, factory, version);
@@ -21,6 +33,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db){
         db.execSQL(CREATE_CITIES);
+        db.execSQL(CREATE_WEATHERS);
     }
 
     public void onUpgrade(SQLiteDatabase db, int newVersion, int oldVersion){
