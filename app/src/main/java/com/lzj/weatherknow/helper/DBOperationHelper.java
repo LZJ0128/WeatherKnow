@@ -4,8 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.lzj.weatherknow.entity.CityEntity;
+import com.lzj.weatherknow.entity.WeatherEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 public class DBOperationHelper {
     public static final String DB_NAME = "city_list";//数据库名
     public static final String TABLE_CITY = "cities";//表名
+    public static final String TABLE_WEATHER = "weathers";
     public static final int VERSION = 1;//版本号
     private SQLiteDatabase mDB;
     private static DBOperationHelper mDBOperation;
@@ -89,5 +92,47 @@ public class DBOperationHelper {
         }
         cursor.close();
         return cityId;
+    }
+
+    /**
+     * 保存天气数据（城市，天气，温度）
+     * @param weather
+     */
+    public void addWeather(String cityName, String weather, String temp){
+        String sql = "select * from " + TABLE_WEATHER + " where city_name = ?";
+        Cursor cursor = mDB.rawQuery(sql, new String[]{cityName});
+        if (cursor.moveToFirst()){
+            Log.e("addWeather", "已保存成功");
+            return;         //如果数据库中存在该城市则不保存
+        }
+        cursor.close();
+        ContentValues cv = new ContentValues();
+        cv.put("city_name", cityName);
+        cv.put("weather", weather);
+        cv.put("temp", temp);
+        mDB.insert(TABLE_WEATHER, null, cv);
+        Log.e("addWeather", "保存成功");
+    }
+
+    /**
+     * 从数据库获取天气列表
+     * @return
+     */
+    public List<WeatherEntity> getWeathers(){
+        List<WeatherEntity> list = new ArrayList<>();
+        String sql = "select * from " + TABLE_WEATHER;
+        Cursor cursor = mDB.rawQuery(sql, null);
+        if (cursor.moveToFirst()){
+            while (cursor.moveToNext()){
+                WeatherEntity entity = new WeatherEntity();
+                entity.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
+                entity.setWeather(cursor.getString(cursor.getColumnIndex("weather")));
+                entity.setTemp(cursor.getString(cursor.getColumnIndex("temp")));
+                Log.e("addWeather", "取出成功");
+                list.add(entity);
+            }
+        }
+        cursor.close();
+        return list;
     }
 }
