@@ -1,9 +1,13 @@
 package com.lzj.weatherknow.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.lzj.weatherknow.R;
@@ -22,6 +26,7 @@ public class WeatherListActivity extends Activity {
     private ListView mListView;
     private List<WeatherEntity> mList = new ArrayList<>();
 
+    private ImageView mImvAdd;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -34,5 +39,19 @@ public class WeatherListActivity extends Activity {
     public void initUI(){
         mListView = (ListView)findViewById(R.id.lsv_weather_list);
         mListView.setAdapter(new WeatherListAdapter(this, mList));
+        mListView.addFooterView(footerView());
+    }
+
+    public View footerView(){
+        View footerView = LayoutInflater.from(this).inflate(R.layout.footer_weather_list, null);
+        mImvAdd = (ImageView)footerView.findViewById(R.id.imv_add);
+        mImvAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WeatherListActivity.this, SelectCityActivity.class);
+                startActivity(intent);
+            }
+        });
+        return footerView;
     }
 }
