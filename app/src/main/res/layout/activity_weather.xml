@@ -62,22 +62,26 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="50dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:gravity="center"
         android:layout_alignParentBottom="true">
 
         <TextView
             android:id="@+id/txv_sug"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
             android:text="生活指数"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/imv_change"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="10dp"
             android:layout_alignParentRight="true"
-            android:text="切换"/>
+            android:background="@drawable/img_change"/>
 
     </RelativeLayout>
 

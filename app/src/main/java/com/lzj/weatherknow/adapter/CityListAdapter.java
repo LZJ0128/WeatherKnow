@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2/24 0024.
+ * SelectCity适配器
  */
 public class CityListAdapter extends BaseAdapter{
 

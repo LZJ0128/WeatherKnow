@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -50,7 +51,6 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     private ListView mLsvWeather;
     List<DailyForecastEntity> mDailyList = new ArrayList<>();
     List<HourlyForecastEntity> mHourlyList = new ArrayList<>();
-    DBOperationHelper dbOperationHelper;
 
     /**
      * 生活指数
@@ -58,11 +58,15 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     private TextView mSug;
     private SuggestionEntity mSugEntity;
 
+    /**
+     * 切换
+     */
+    private ImageView mImvChange;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        dbOperationHelper = DBOperationHelper.getInstance(this);
         cancelOrClick = SharePreferenceHelper.getStringSP(WeatherActivity.this, "cancel_or_click", "click", "");
         initUI();
         getCityWeather();
@@ -79,12 +83,19 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
 
         mSug = (TextView)findViewById(R.id.txv_sug);
         mSug.setOnClickListener(this);
+        mImvChange = (ImageView)findViewById(R.id.imv_change);
+        mImvChange.setOnClickListener(this);
+
     }
 
     public void onClick(View v){
         switch (v.getId()){
             case R.id.txv_sug:
                 showSugDialog(mSugEntity);
+                break;
+            case R.id.imv_change:
+                Intent intent = new Intent(WeatherActivity.this, WeatherListActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -127,11 +138,13 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 mHourlyList = heWeatherDataEntity.get(0).getHourlyForecastList();
                 fillDailyData(mDailyList, mHourlyList);
                 AqiEntity aqiEntity = heWeatherDataEntity.get(0).getAqi();
+
                 //获取底部信息
                 getFooterView(aqiEntity, nowEntity, mDailyList);
 
                 //生活指数
                 mSugEntity = heWeatherDataEntity.get(0).getSuggestion();
+
             }
 
             @Override
@@ -154,6 +167,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 mTxvTemp.setText(nowEntity.getTmp() + "°");
                 mTxvCity.setText(mCityName);
                 mTxvWeather.setText(nowEntity.getNowCond().getTxt());
+                //把城市名、天气、温度存进数据库
+                DBOperationHelper.getInstance(getBaseContext()).addWeather(mCityName, nowEntity.getNowCond().getTxt(), nowEntity.getTmp() + "°");
             }
         });
     }
@@ -236,8 +251,13 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                qity.setText(aqiEntity.getAqiCity().getQuality());
-                aqi.setText(aqiEntity.getAqiCity().getAqi());
+                if (aqiEntity != null){
+                    qity.setText(aqiEntity.getAqiCity().getQuality());
+                    aqi.setText(aqiEntity.getAqiCity().getAqi());
+                }else {
+                    qity.setText("暂无数据");
+                    aqi.setText("暂无数据");
+                }
                 sr.setText(dailyList.get(0).getAstro().getSunRise());
                 ss.setText(dailyList.get(0).getAstro().getSunSet());
                 windDir.setText(nowEntity.getNowWind().getDir());
