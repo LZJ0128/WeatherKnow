@@ -46,7 +46,6 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
      * 分别为：城市名，天气，温度，更新时间
      */
     private TextView mTxvCity, mTxvWeather, mTxvTemp, mTxvUpdate;
-    private String cancelOrClick;
     private String mCityName;//城市名
     private ListView mLsvWeather;
     List<DailyForecastEntity> mDailyList = new ArrayList<>();
@@ -67,7 +66,6 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        cancelOrClick = SharePreferenceHelper.getStringSP(WeatherActivity.this, "cancel_or_click", "click", "");
         initUI();
         getCityWeather();
     }
@@ -107,11 +105,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
      */
     public void getCityWeather(){
 
-        if (cancelOrClick.equals("click")){
-            mCityName = SharePreferenceHelper.getStringSP(this, "city_name", "city_name", "福州");
-        }else if (cancelOrClick.equals("cancel")){
+        mCityName = SharePreferenceHelper.getStringSP(this, "city_name", "city_name", "福州");
 
-        }
         //城市名转换为城市ID
         String cityId = DBOperationHelper.getInstance(this).getCityId(mCityName);
         //由城市ID获取天气信息

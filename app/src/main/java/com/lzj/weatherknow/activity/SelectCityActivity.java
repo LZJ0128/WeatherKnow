@@ -100,10 +100,10 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
     public void onClick(View view){
         switch (view.getId()){
             case R.id.txv_cancel:
-                //取消后直接返回到天气页
-                Intent intent = new Intent(SelectCityActivity.this, WeatherActivity.class);
-                SharePreferenceHelper.setStringSP(SelectCityActivity.this, "cancel_or_click", "click", "cancel");
+                //取消后直接返回到天气列表页
+                Intent intent = new Intent(SelectCityActivity.this, WeatherListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             default:
                 break;
@@ -118,7 +118,6 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String cityName = mCityList.get(position);
             Intent intent = new Intent(SelectCityActivity.this, WeatherActivity.class);
-            SharePreferenceHelper.setStringSP(SelectCityActivity.this, "cancel_or_click", "click", "click");
             SharePreferenceHelper.setBooleanSP(SelectCityActivity.this, "city_selected", "select", true);
             SharePreferenceHelper.setStringSP(SelectCityActivity.this, "city_name", "city_name", cityName);
             startActivity(intent);
@@ -172,4 +171,5 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
 
         }
     };
+
 }

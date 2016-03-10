@@ -46,6 +46,7 @@ public class WeatherListActivity extends Activity {
         mListView.setOnItemClickListener(mOnItemClick);
     }
 
+
     AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
