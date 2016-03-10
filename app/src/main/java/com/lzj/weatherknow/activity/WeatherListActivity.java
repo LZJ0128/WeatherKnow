@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 3/9 0009.
+ * 天气列表
  */
 public class WeatherListActivity extends Activity {
 
@@ -49,6 +50,7 @@ public class WeatherListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(WeatherListActivity.this, SelectCityActivity.class);
+                intent.putExtra("from_weather_list", true);
                 startActivity(intent);
             }
         });

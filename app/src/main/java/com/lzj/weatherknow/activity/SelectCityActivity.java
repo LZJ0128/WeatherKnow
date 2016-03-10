@@ -41,9 +41,9 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
     List<CityEntity> mCityEntity;
 
     /**
-     * 标志位，是否从WeatherActivity跳转而来
+     * 标志位，是否从WeatherListActivity跳转而来
      */
-    private boolean isFromWeatherActivity;
+    private boolean isFromWeatherList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -80,12 +80,12 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
     }
 
     /**
-     * 只有已经选择了城市且不是从WeatherActivity跳转过来，才会直接跳转到WeatherActivity
+     * 只有已经选择了城市且不是从WeatherListActivity跳转过来，才会直接跳转到WeatherActivity
      */
     public void jumpToWeather(){
-        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+        isFromWeatherList = getIntent().getBooleanExtra("from_weather_list", false);
         if (SharePreferenceHelper.getBooleanSP(SelectCityActivity.this, "city_selected",
-                "select", false) && !isFromWeatherActivity){
+                "select", false) && !isFromWeatherList){
             Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
             finish();
