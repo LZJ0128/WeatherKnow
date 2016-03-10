@@ -50,6 +50,9 @@ public class WeatherListActivity extends Activity {
     AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position == mList.size()){
+                return;
+            }
             String cityName = mList.get(position).getCityName();
             SharePreferenceHelper.setStringSP(WeatherListActivity.this, "city_name", "city_name", cityName);
             Intent intent = new Intent(WeatherListActivity.this, WeatherActivity.class);
