@@ -112,7 +112,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         }else if (cancelOrClick.equals("cancel")){
 
         }
-        //城市ID转换为城市ID
+        //城市名转换为城市ID
         String cityId = DBOperationHelper.getInstance(this).getCityId(mCityName);
         //由城市ID获取天气信息
         HttpUtil.sendHttpRequest(ConstantHelper.cityInfoUrl(cityId), new HttpCallbackListener() {
