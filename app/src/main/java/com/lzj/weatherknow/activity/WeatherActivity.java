@@ -215,7 +215,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                     pop1.setText(hourlyList.get(0).getPop() + "%");
                     time2.setText("04:00");
                     temp2.setText(dailyList.get(0).getTmp().getMin() + "°");
-                    pop2.setText(hourlyList.get(1).getPop() + "%");
+                    pop2.setText(hourlyList.get(0).getPop() + "%");
                     return;
                 }
 
