@@ -101,7 +101,7 @@ public class DBOperationHelper {
     public void addWeather(String cityName, String weather, String temp){
         String sql = "select * from " + TABLE_WEATHER + " where city_name = ?";
         Cursor cursor = mDB.rawQuery(sql, new String[]{cityName});
-        if (cursor.moveToFirst()){
+        if (cursor.getCount()>0){
             Log.e("addWeather", "已保存成功");
             return;         //如果数据库中存在该城市则不保存
         }
@@ -115,7 +115,7 @@ public class DBOperationHelper {
     }
 
     /**
-     * 从数据库获取天气列表
+     * 从数据库获取天气数据列表
      * @return
      */
     public List<WeatherEntity> getWeathers(){
@@ -128,11 +128,18 @@ public class DBOperationHelper {
                 entity.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
                 entity.setWeather(cursor.getString(cursor.getColumnIndex("weather")));
                 entity.setTemp(cursor.getString(cursor.getColumnIndex("temp")));
-                Log.e("addWeather", "取出成功");
                 list.add(entity);
             }
         }
         cursor.close();
         return list;
+    }
+
+    /**
+     * 删除天气列表的一条数据
+     */
+    public void deleteWeather(String cityName){
+        mDB.delete(TABLE_WEATHER, "city_name = ?", new String[]{cityName});
+        Log.e("DBOperationHelper", "你删除了" + cityName);
     }
 }
