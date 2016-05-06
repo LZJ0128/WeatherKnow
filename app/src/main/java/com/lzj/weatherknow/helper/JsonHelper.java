@@ -73,11 +73,11 @@ public class JsonHelper {
                 cityEntity.setCityId(cityInfo.getJSONObject(i).getString("id"));
                 DBOperationHelper.getInstance(context).saveCity(cityEntity);
             }
-            Log.e("JsonHelper", "保存成功");
+            Log.e("LZJJsonHelper", "保存成功");
             SharePreferenceHelper.setIntSP(context, "flag", "flag", 1);
         }catch (JSONException e){
             e.printStackTrace();
-            Log.e("JsonHelper", "JsonException");
+            Log.e("LZJJsonHelper", "JsonException");
         }
     }
 
