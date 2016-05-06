@@ -5,11 +5,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lzj.weatherknow.R;
 import com.lzj.weatherknow.entity.WeatherEntity;
+import com.lzj.weatherknow.helper.DBOperationHelper;
 
 import java.util.List;
 
@@ -44,7 +50,7 @@ public class WeatherListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View concertView, ViewGroup parent){
+    public View getView(final int position, View concertView, ViewGroup parent){
         WeatherHolder holder = null;
         if (concertView == null){
             holder = new WeatherHolder();
@@ -52,16 +58,28 @@ public class WeatherListAdapter extends BaseAdapter {
             holder.mTxvCityName = (TextView)concertView.findViewById(R.id.txv_city_name);
             holder.mTxvTemp = (TextView)concertView.findViewById(R.id.txv_temp);
             holder.mTxvWeather = (TextView)concertView.findViewById(R.id.txv_weather);
+            holder.mTxvDelete = (TextView)concertView.findViewById(R.id.txv_delete);
             concertView.setTag(holder);
         }else {
             holder = (WeatherHolder)concertView.getTag();
         }
 
-        WeatherEntity entity = getItem(position);
+        final WeatherEntity entity = getItem(position);
         holder.mTxvCityName.setText(entity.getCityName());
         holder.mTxvWeather.setText(entity.getWeather());
         holder.mTxvTemp.setText(entity.getTemp());
-
+        holder.mTxvDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getCount() == 1){
+                    Toast.makeText(mContext, "无法删除", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                DBOperationHelper.getInstance(mContext).deleteWeather(entity.getCityName());
+                mList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
         return concertView;
     }
 
@@ -69,6 +87,7 @@ public class WeatherListAdapter extends BaseAdapter {
         private TextView mTxvCityName;
         private TextView mTxvWeather;
         private TextView mTxvTemp;
+        private TextView mTxvDelete;
     }
 
 
