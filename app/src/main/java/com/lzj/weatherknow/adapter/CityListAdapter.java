@@ -21,9 +21,9 @@ public class CityListAdapter extends BaseAdapter{
     private Context mContext;
     private List<String> mCityList = new ArrayList<>();
 
-    public CityListAdapter(Context context, List<String> cityEntities){
+    public CityListAdapter(Context context, List<String> cityList){
         this.mContext = context;
-        this.mCityList = cityEntities;
+        this.mCityList = cityList;
     }
 
     @Override
