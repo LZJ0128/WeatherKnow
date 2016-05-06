@@ -46,6 +46,8 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
      */
     private boolean isFromWeatherList;
 
+    private String newOrOld = "old";
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -118,7 +120,12 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
     private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String cityName = mCityList.get(position);
+            String cityName;
+            if (newOrOld.equals("old")){
+                cityName = mCityList.get(position);
+            }else {
+                cityName = mNewCityList.get(position);
+            }
             Intent intent = new Intent(SelectCityActivity.this, WeatherActivity.class);
             SharePreferenceHelper.setBooleanSP(SelectCityActivity.this, "city_selected", "select", true);
             SharePreferenceHelper.setStringSP(SelectCityActivity.this, "city_name", "city_name", cityName);
@@ -159,6 +166,7 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             mNewCityList.clear();
             String cityName = mEdtSearch.getText().toString();
+            newOrOld = "new";
             for (int i=0;i<mCityList.size();i++){
                 if (mCityList.get(i).contains(cityName) || cityName.contains(mCityList.get(i))){
                     mNewCityList.add(mCityList.get(i));
