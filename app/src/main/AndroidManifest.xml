@@ -18,8 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.WeatherActivity"
-                android:launchMode="singleTask" />
+        <activity android:name=".activity.WeatherActivity" />
         <activity android:name=".activity.WeatherListActivity"/>
     </application>
 

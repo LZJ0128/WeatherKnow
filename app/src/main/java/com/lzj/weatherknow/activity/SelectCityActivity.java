@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.lzj.weatherknow.adapter.CityListAdapter;
 import com.lzj.weatherknow.R;
 import com.lzj.weatherknow.entity.CityEntity;
+import com.lzj.weatherknow.helper.ActivityManagerHelper;
 import com.lzj.weatherknow.helper.ConstantHelper;
 import com.lzj.weatherknow.helper.DBOperationHelper;
 import com.lzj.weatherknow.helper.JsonHelper;
@@ -50,6 +51,7 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_select_city);
+        ActivityManagerHelper.getInstance().addActivity(this);
         jumpToWeather();
         if (SharePreferenceHelper.getIntSP(this, "flag", "flag", 0) == 0){
             //防止多次从数据库加载数据，加载一次后不再加载
@@ -132,14 +134,14 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
         HttpUtil.sendHttpRequest(ConstantHelper.URL_CITY_LIST, new HttpCallbackListener() {
             @Override
             public void onResponseSuccess(String response) {
-                Log.e("MainActivity1", "onResponseSuccess");
+                Log.e("LZJSelectCityActivity", "onResponseSuccess");
                 JsonHelper.handleCityListResponse(SelectCityActivity.this, response);
 //                initUI();
             }
 
             @Override
             public void onResponseError(Exception e) {
-                Log.e("MainActivity1", "onResponseError");
+                Log.e("LZJSelectCityActivity", "onResponseError");
             }
         });
     }
@@ -158,12 +160,11 @@ public class SelectCityActivity extends Activity implements View.OnClickListener
             mNewCityList.clear();
             String cityName = mEdtSearch.getText().toString();
             for (int i=0;i<mCityList.size();i++){
-                if (mCityList.get(i).contains(cityName)){
+                if (mCityList.get(i).contains(cityName) || cityName.contains(mCityList.get(i))){
                     mNewCityList.add(mCityList.get(i));
                 }
             }
-            mCityList = mNewCityList;
-            mLsvCity.setAdapter(new CityListAdapter(SelectCityActivity.this, mCityList));
+            mLsvCity.setAdapter(new CityListAdapter(SelectCityActivity.this, mNewCityList));
         }
 
         @Override
