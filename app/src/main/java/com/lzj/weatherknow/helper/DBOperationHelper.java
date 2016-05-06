@@ -46,7 +46,7 @@ public class DBOperationHelper {
     }
 
     /**
-     * 将数据保存到本地
+     * 将所有城市名字和ID保存到本地
      * @param cityEntity
      */
     public void saveCity(CityEntity cityEntity){
