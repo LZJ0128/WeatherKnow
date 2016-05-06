@@ -53,18 +53,16 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     private ListView mLsvWeather;
     List<DailyForecastEntity> mDailyList = new ArrayList<>();
     List<HourlyForecastEntity> mHourlyList = new ArrayList<>();
-
     /**
      * 生活指数
      */
     private TextView mSug;
     private SuggestionEntity mSugEntity;
-
     /**
      * 切换
      */
     private ImageView mImvChange;
-
+    //退出间隔
     private long mExitTime = 0;
 
     @Override
@@ -192,6 +190,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         final TextView temp0 = (TextView)headView.findViewById(R.id.txv_temp0);
         final TextView temp1 = (TextView)headView.findViewById(R.id.txv_temp1);
         final TextView temp2 = (TextView)headView.findViewById(R.id.txv_temp2);
+        final TextView pop0 = (TextView)headView.findViewById(R.id.txv_pop0);
+        final TextView pop1 = (TextView)headView.findViewById(R.id.txv_pop1);
+        final TextView pop2 = (TextView)headView.findViewById(R.id.txv_pop2);
 
         runOnUiThread(new Runnable() {
             @Override
@@ -206,26 +207,32 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
 
                 time0.setText(hourlyList.get(0).getDate().substring(11));
                 temp0.setText(hourlyList.get(0).getTmp() + "°");
+                pop0.setText(hourlyList.get(0).getPop() + "%");
 
                 if (hourlyList.size() == 1){
                     time1.setText("01:00");
                     temp1.setText(Integer.valueOf(hourlyList.get(0).getTmp()) - 1 + "°");
+                    pop1.setText(hourlyList.get(0).getPop() + "%");
                     time2.setText("04:00");
                     temp2.setText(dailyList.get(0).getTmp().getMin() + "°");
+                    pop2.setText(hourlyList.get(1).getPop() + "%");
                     return;
                 }
 
                 time1.setText(hourlyList.get(1).getDate().substring(11));
                 temp1.setText(hourlyList.get(1).getTmp() + "°");
+                pop1.setText(hourlyList.get(1).getPop() + "%");
 
                 if (hourlyList.size() == 2){
                     time2.setText("01:00");
                     temp2.setText(Integer.valueOf(hourlyList.get(1).getTmp()) - 2 + "°");
+                    pop2.setText(hourlyList.get(1).getPop() + "%");
                     return;
                 }
 
                 time2.setText(hourlyList.get(2).getDate().substring(11));
                 temp2.setText(hourlyList.get(2).getTmp() + "°");
+                pop2.setText(hourlyList.get(2).getPop() + "%");
 
             }
         });
