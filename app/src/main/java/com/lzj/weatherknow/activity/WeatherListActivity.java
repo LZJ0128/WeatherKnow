@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.lzj.weatherknow.R;
 import com.lzj.weatherknow.adapter.WeatherListAdapter;
 import com.lzj.weatherknow.entity.WeatherEntity;
+import com.lzj.weatherknow.helper.ActivityManagerHelper;
 import com.lzj.weatherknow.helper.DBOperationHelper;
 import com.lzj.weatherknow.helper.SharePreferenceHelper;
 
@@ -35,14 +36,23 @@ public class WeatherListActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_weather_list);
+        ActivityManagerHelper.getInstance().addActivity(this);
         mList = DBOperationHelper.getInstance(this).getWeathers();
         initUI();
     }
 
     public void initUI(){
+        mImvAdd = (ImageView)this.findViewById(R.id.imv_add);
+        mImvAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WeatherListActivity.this, SelectCityActivity.class);
+                intent.putExtra("from_weather_list", true);
+                startActivity(intent);
+            }
+        });
         mListView = (ListView)findViewById(R.id.lsv_weather_list);
         mListView.setAdapter(new WeatherListAdapter(this, mList));
-        mListView.addFooterView(footerView());
         mListView.setOnItemClickListener(mOnItemClick);
     }
 
@@ -61,17 +71,4 @@ public class WeatherListActivity extends Activity {
         }
     };
 
-    public View footerView(){
-        View footerView = LayoutInflater.from(this).inflate(R.layout.footer_weather_list, null);
-        mImvAdd = (ImageView)footerView.findViewById(R.id.imv_add);
-        mImvAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WeatherListActivity.this, SelectCityActivity.class);
-                intent.putExtra("from_weather_list", true);
-                startActivity(intent);
-            }
-        });
-        return footerView;
-    }
 }
