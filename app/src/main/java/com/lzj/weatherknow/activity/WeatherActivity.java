@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lzj.weatherknow.R;
 import com.lzj.weatherknow.adapter.SugListAdapter;
@@ -30,6 +32,7 @@ import com.lzj.weatherknow.entity.ObjectEntity;
 import com.lzj.weatherknow.entity.SugListEntity;
 import com.lzj.weatherknow.entity.SuggestionEntity;
 import com.lzj.weatherknow.entity.UpdateEntity;
+import com.lzj.weatherknow.helper.ActivityManagerHelper;
 import com.lzj.weatherknow.helper.ConstantHelper;
 import com.lzj.weatherknow.helper.DBOperationHelper;
 import com.lzj.weatherknow.helper.JsonHelper;
@@ -62,10 +65,13 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
      */
     private ImageView mImvChange;
 
+    private long mExitTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        ActivityManagerHelper.getInstance().addActivity(this);
         initUI();
         getCityWeather();
     }
@@ -77,7 +83,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mTxvUpdate = (TextView)findViewById(R.id.txv_update);
         mLsvWeather = (ListView)findViewById(R.id.lsv_weather);
 
-        mLsvWeather.setAdapter(new WeatherAdapter(this, mDailyList));
+//        mLsvWeather.setAdapter(new WeatherAdapter(this, mDailyList));
 
         mSug = (TextView)findViewById(R.id.txv_sug);
         mSug.setOnClickListener(this);
@@ -162,7 +168,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 mTxvTemp.setText(nowEntity.getTmp() + "°");
                 mTxvCity.setText(mCityName);
                 mTxvWeather.setText(nowEntity.getNowCond().getTxt());
-                //把城市名、天气、温度存进数据库
+                //把城市名、天气、温度存进数据库，以便在WeatherListActivity中使用
                 DBOperationHelper.getInstance(getBaseContext()).addWeather(mCityName, nowEntity.getNowCond().getTxt(), nowEntity.getTmp() + "°");
             }
         });
@@ -338,6 +344,27 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         listView.setAdapter(new SugListAdapter(getBaseContext(), getSugList(entity)));
         listView.setClickable(false);
         dialog.show();
+    }
+
+    /**
+     * 再按一次退出程序
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if (System.currentTimeMillis() - mExitTime > 2000){
+                Toast.makeText(WeatherActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            }else {
+                ActivityManagerHelper.getInstance().exit();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }
