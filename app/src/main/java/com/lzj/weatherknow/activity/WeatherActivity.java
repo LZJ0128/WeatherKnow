@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +72,10 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
      * 切换
      */
     private ImageView mImvChange;
+    /**
+     * 背景图片
+     */
+    private RelativeLayout mRelBg;
     //退出间隔
     private long mExitTime = 0;
     //进度条
@@ -92,6 +97,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mLsvWeather = (ListView)findViewById(R.id.lsv_weather);
         mImvRefresh = (ImageView)findViewById(R.id.imv_refresh);
         mTxvRefresh = (TextView)findViewById(R.id.txv_refresh);
+        mRelBg = (RelativeLayout)findViewById(R.id.rel_bg);
 //        mLsvWeather.setAdapter(new WeatherAdapter(this, mDailyList));
 
         mSug = (TextView)findViewById(R.id.txv_sug);
@@ -185,9 +191,55 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 mTxvTemp.setText(nowEntity.getTmp() + "°");
                 mTxvCity.setText(mCityName);
                 mTxvWeather.setText(nowEntity.getNowCond().getTxt());
+
+                //加载天气对应的背景图片
+                switch (nowEntity.getNowCond().getTxt()){
+                    case "晴":
+                    case "晴间多云":
+                        mRelBg.setBackgroundResource(R.drawable.bg_qing);
+                        break;
+                    case "多云":
+                    case "少云":
+                        mRelBg.setBackgroundResource(R.drawable.bg_duoyun);
+                        break;
+                    case "小雨":
+                        mRelBg.setBackgroundResource(R.drawable.bg_xiaoyu);
+                        break;
+                    case "大雨":
+                    case "暴雨":
+                    case "大暴雨":
+                    case "特大暴雨":
+                        mRelBg.setBackgroundResource(R.drawable.bg_dayu);
+                        break;
+                    case "阵雨":
+                    case "强阵雨":
+                        mRelBg.setBackgroundResource(R.drawable.bg_zhenyu);
+                            break;
+                    case "雪":
+                    case "暴雪":
+                    case "小雪":
+                    case "大雪":
+                        mRelBg.setBackgroundResource(R.drawable.bg_xue);
+                        break;
+                    case "阴":
+                        mRelBg.setBackgroundResource(R.drawable.bg_yin);
+                        break;
+                    case "雾":
+                    case "霾":
+                        mRelBg.setBackgroundResource(R.drawable.bg_wumai);
+                        break;
+                    case "雷阵雨":
+                        mRelBg.setBackgroundResource(R.drawable.bg_leidian);
+                        break;
+                    default:
+                        break;
+                }
+
+
                 //把城市名、天气、温度存进数据库，以便在WeatherListActivity中使用
                 DBOperationHelper.getInstance(getBaseContext()).addWeather(mCityName, nowEntity.getNowCond().getTxt(), nowEntity.getTmp() + "°");
             }

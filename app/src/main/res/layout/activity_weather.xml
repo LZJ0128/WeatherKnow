@@ -3,88 +3,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/rel_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="30dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="30dp"
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/imv_refresh"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/img_refresh"/>
-
-            <TextView
-                android:id="@+id/txv_refresh"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="17:48"/>
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/imv_refresh"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/img_refresh"/>
+
+                <TextView
+                    android:id="@+id/txv_refresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="17:48"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txv_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="20dp"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/txv_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/txv_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="40sp"/>
+
+            <ListView
+                android:id="@+id/lsv_weather"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null">
+
+            </ListView>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txv_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="20dp"
-            android:textSize="40sp" />
-
-        <TextView
-            android:id="@+id/txv_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/txv_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40sp"/>
-
-        <ListView
-            android:id="@+id/lsv_weather"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null">
+            android:layout_height="50dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true">
 
-        </ListView>
+            <TextView
+                android:id="@+id/txv_sug"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="生活指数"/>
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imv_change"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/img_change"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:gravity="center"
-        android:layout_alignParentBottom="true">
-
-        <TextView
-            android:id="@+id/txv_sug"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="生活指数"/>
-
-        <ImageView
-            android:id="@+id/imv_change"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="10dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/img_change"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 
