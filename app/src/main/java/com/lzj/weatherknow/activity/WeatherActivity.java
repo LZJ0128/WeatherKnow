@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,13 +48,20 @@ import java.util.List;
 public class WeatherActivity extends Activity implements View.OnClickListener{
 
     /**
-     * 分别为：城市名，天气，温度，更新时间
+     * 分别为：城市名，ID, 天气，温度
      */
-    private TextView mTxvCity, mTxvWeather, mTxvTemp, mTxvUpdate;
+    private TextView mTxvCity, mTxvWeather, mTxvTemp;
     private String mCityName;//城市名
+    private String mCityId;
     private ListView mLsvWeather;
     List<DailyForecastEntity> mDailyList = new ArrayList<>();
     List<HourlyForecastEntity> mHourlyList = new ArrayList<>();
+    /**
+     * 更新时间
+     */
+    private UpdateEntity mUpdateEntity;
+    private ImageView mImvRefresh;
+    private TextView mTxvRefresh;
     /**
      * 生活指数
      */
@@ -81,15 +89,16 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mTxvCity = (TextView)findViewById(R.id.txv_city);
         mTxvWeather = (TextView)findViewById(R.id.txv_weather);
         mTxvTemp = (TextView)findViewById(R.id.txv_temp);
-        mTxvUpdate = (TextView)findViewById(R.id.txv_update);
         mLsvWeather = (ListView)findViewById(R.id.lsv_weather);
-
+        mImvRefresh = (ImageView)findViewById(R.id.imv_refresh);
+        mTxvRefresh = (TextView)findViewById(R.id.txv_refresh);
 //        mLsvWeather.setAdapter(new WeatherAdapter(this, mDailyList));
 
         mSug = (TextView)findViewById(R.id.txv_sug);
         mSug.setOnClickListener(this);
         mImvChange = (ImageView)findViewById(R.id.imv_change);
         mImvChange.setOnClickListener(this);
+        mImvRefresh.setOnClickListener(this);
 
     }
 
@@ -101,6 +110,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
             case R.id.imv_change:
                 Intent intent = new Intent(WeatherActivity.this, WeatherListActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.imv_refresh:
+                Toast.makeText(WeatherActivity.this, "已更新信息！", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -115,11 +127,11 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mCityName = SharePreferenceHelper.getStringSP(this, "city_name", "city_name", "福州");
 
         //城市名转换为城市ID
-        String cityId = DBOperationHelper.getInstance(this).getCityId(mCityName);
+        mCityId = DBOperationHelper.getInstance(this).getCityId(mCityName);
         //显示进度条
         mProgressDialog = ProgressDialog.show(WeatherActivity.this, "请稍等。。。", "获取数据中。。。", true);
         //由城市ID获取天气信息
-        HttpUtil.sendHttpRequest(ConstantHelper.cityInfoUrl(cityId), new HttpCallbackListener() {
+        HttpUtil.sendHttpRequest(ConstantHelper.cityInfoUrl(mCityId), new HttpCallbackListener() {
             @Override
             public void onResponseSuccess(String response) {
                 ObjectEntity objectEntity = JsonHelper.fromJson(response, ObjectEntity.class);
@@ -132,11 +144,14 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 //当前天气信息
                 NowEntity nowEntity = heWeatherDataEntity.get(0).getNow();
                 fillNowData(nowEntity);
+
                 //基础天气信息
                 BasicEntity basicEntity = heWeatherDataEntity.get(0).getBasic();
+
                 //获取更新时间
-                UpdateEntity updateEntity = basicEntity.getUpdate();
-                fillUpdateData(updateEntity);
+                mUpdateEntity = basicEntity.getUpdate();
+                fillUpdateData(mUpdateEntity);
+
                 //获取每日天气列表
                 mDailyList = heWeatherDataEntity.get(0).getDailyForecastList();
                 mHourlyList = heWeatherDataEntity.get(0).getHourlyForecastList();
@@ -149,7 +164,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 //生活指数
                 mSugEntity = heWeatherDataEntity.get(0).getSuggestion();
 
-                //关闭进度条
+                //取消进度条
                 mProgressDialog.dismiss();
             }
 
@@ -297,7 +312,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTxvUpdate.setText(updateEntity.getLocalTime().substring(11));
+                mTxvRefresh.setText(updateEntity.getLocalTime().substring(11));
             }
         });
     }
