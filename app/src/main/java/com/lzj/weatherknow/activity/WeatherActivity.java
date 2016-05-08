@@ -2,6 +2,7 @@ package com.lzj.weatherknow.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -64,6 +65,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     private ImageView mImvChange;
     //退出间隔
     private long mExitTime = 0;
+    //进度条
+    private ProgressDialog mProgressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +116,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
 
         //城市名转换为城市ID
         String cityId = DBOperationHelper.getInstance(this).getCityId(mCityName);
+        //显示进度条
+        mProgressDialog = ProgressDialog.show(WeatherActivity.this, "请稍等。。。", "获取数据中。。。", true);
         //由城市ID获取天气信息
         HttpUtil.sendHttpRequest(ConstantHelper.cityInfoUrl(cityId), new HttpCallbackListener() {
             @Override
@@ -144,6 +149,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 //生活指数
                 mSugEntity = heWeatherDataEntity.get(0).getSuggestion();
 
+                //关闭进度条
+                mProgressDialog.dismiss();
             }
 
             @Override
