@@ -49,7 +49,7 @@ public class WeatherAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View concertView, ViewGroup parent){
-        WeatherHolder holder = null;
+        WeatherHolder holder;
         if (concertView == null){
             holder = new WeatherHolder();
             concertView = LayoutInflater.from(mContext).inflate(R.layout.item_weather_2, null);
@@ -57,6 +57,7 @@ public class WeatherAdapter extends BaseAdapter{
             holder.mTxvWeek = (TextView)concertView.findViewById(R.id.txv_weekday1);
             holder.mTxvTemp = (TextView)concertView.findViewById(R.id.txv_temp);
             holder.mImageView = (ImageView)concertView.findViewById(R.id.img_weather1);
+            concertView.setTag(holder);
         }else {
             holder = (WeatherHolder)concertView.getTag();
         }
