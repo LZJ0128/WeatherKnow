@@ -4,54 +4,66 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <com.lzj.weatherknow.custom.SwipeLayout
+    <RelativeLayout
+        android:id="@+id/rel_bg_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp"
+        android:scaleX="1"
+        android:scaleY="1">
 
-        <RelativeLayout
+        <com.lzj.weatherknow.custom.SwipeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txv_city_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="30sp"
-                android:text="福州"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txv_weather"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textSize="20sp"
-                android:text="多云"/>
+                <TextView
+                    android:id="@+id/txv_city_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:text="福州"/>
 
-            <TextView
-                android:id="@+id/txv_temp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textSize="30sp"
-                android:text="11°"/>
+                <TextView
+                    android:id="@+id/txv_weather"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textSize="30sp"
+                    android:text="多云"/>
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/txv_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="40sp"
+                    android:text="11°"/>
 
-        <RelativeLayout
-            android:layout_width="65dp"
-            android:layout_height="wrap_content"
-            android:background="#ff0000">
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/txv_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="30sp"
-                android:textColor="#fff"
-                android:text="删除"/>
+            <RelativeLayout
+                android:layout_width="65dp"
+                android:layout_height="50dp"
+                android:background="#ff0000">
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/txv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
+                    android:textColor="#fff"
+                    android:layout_centerInParent="true"
+                    android:text="删除"/>
 
-    </com.lzj.weatherknow.custom.SwipeLayout>
+            </RelativeLayout>
+
+        </com.lzj.weatherknow.custom.SwipeLayout>
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

@@ -2,25 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#454545">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imv_add"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/img_add"/>
+            <ImageView
+                android:id="@+id/imv_add"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/img_add"/>
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-    <ListView
-        android:id="@+id/lsv_weather_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <ListView
+            android:id="@+id/lsv_weather_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
 
 </LinearLayout>

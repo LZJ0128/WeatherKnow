@@ -79,7 +79,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     //退出间隔
     private long mExitTime = 0;
     //进度条
-    private ProgressDialog mProgressDialog = null;
+    private Dialog mDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,8 +134,10 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
 
         //城市名转换为城市ID
         mCityId = DBOperationHelper.getInstance(this).getCityId(mCityName);
+
         //显示进度条
-        mProgressDialog = ProgressDialog.show(WeatherActivity.this, "请稍等。。。", "获取数据中。。。", true);
+        showProgressDialog();
+
         //由城市ID获取天气信息
         HttpUtil.sendHttpRequest(ConstantHelper.cityInfoUrl(mCityId), new HttpCallbackListener() {
             @Override
@@ -171,7 +173,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 mSugEntity = heWeatherDataEntity.get(0).getSuggestion();
 
                 //取消进度条
-                mProgressDialog.dismiss();
+                mDialog.dismiss();
             }
 
             @Override
@@ -197,7 +199,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 mTxvWeather.setText(nowEntity.getNowCond().getTxt());
 
                 //加载天气对应的背景图片
-                switch (nowEntity.getNowCond().getTxt()){
+                switch (nowEntity.getNowCond().getTxt()) {
                     case "晴":
                     case "晴间多云":
                         mRelBg.setBackgroundResource(R.drawable.bg_qing);
@@ -218,7 +220,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                     case "阵雨":
                     case "强阵雨":
                         mRelBg.setBackgroundResource(R.drawable.bg_zhenyu);
-                            break;
+                        break;
                     case "雪":
                     case "暴雪":
                     case "小雪":
@@ -425,6 +427,20 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         listView.setAdapter(new SugListAdapter(getBaseContext(), getSugList(entity)));
         listView.setClickable(false);
         dialog.show();
+    }
+
+    /**
+     * 显示加载中
+     */
+    public void showProgressDialog(){
+        mDialog  = new Dialog(WeatherActivity.this, R.style.ProgressDialog);
+        mDialog.setContentView(R.layout.progress_dialog);
+        mDialog.setCanceledOnTouchOutside(true);
+        Window window = mDialog.getWindow();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.gravity = Gravity.CENTER;
+        window.setAttributes(params);
+        mDialog.show();
     }
 
     /**
